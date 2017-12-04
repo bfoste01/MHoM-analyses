@@ -1,0 +1,16 @@
+---
+title: "Multilevel Models of the MHoM Measure"
+author: "Brandon Foster, Ph.D."
+date: "`r format(Sys.time(), '%d %B, %Y, %H:%M')`"
+output:
+  html_document:
+    theme: paper
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Let's examine how much we've learned from this data by examining the uncertainty in the parameters. 
