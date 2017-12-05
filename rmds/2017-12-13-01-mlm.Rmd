@@ -9,8 +9,247 @@ output:
     toc_float: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Load the necessary packages for analyses, as well as the merged data. 
+```{r import, warning=FALSE, message=FALSE, include=FALSE}
+# Load packages ----
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(readr, dplyr, stringr, tidyverse, lme4, ggthemes,
+               knitr, lattice, MASS, car, sjPlot, lsmeans, gridExtra,
+               LMERConvenienceFunctions, HLMdiag, plyr, nullabor, papeR,
+               DHARMa, MuMIn, r2glmm, broom)
+
+# Read in the data ----
+merged.dat <- read_rds("../data/merged.dat.rds")
+
+# Subset out the variables needed ----
+colnames(merged.dat)
+sapply(merged.dat, class)
+numeric.vars <- c("G10_Scaled", "G8_Scaled")
+factor.vars <- c("ID")
+# convert to class
+merged.dat[,numeric.vars] <- lapply(merged.dat[,numeric.vars], as.numeric)
+merged.dat[,factor.vars] <- lapply(merged.dat[,factor.vars], factor)
+
+# omit missing
+m_vars <- na.omit(merged.dat %>%
+  dplyr::select(ID, StuID, G8_Scaled, G10_Scaled, 12:15, 18, 20:26, 40:43))
+
+# munge to center
+## centered?
+ctr <- function(v, ...)
+    (v - mean(v, ...) ) / sd(v, ...)
+
+m_vars <- within(m_vars, {
+    g8_c <- ctr(G8_Scaled)
+    g10_c <- ctr(G10_Scaled)
+})
+
 ```
 
-Let's examine how much we've learned from this data by examining the uncertainty in the parameters. 
+## Null Model
+
+Examine the variance in the outcome between teachers. First, let's look at the number of students within each class to see if variance estimates can be easily generated. Four teachers have only one student, which could be problematic. The ICC for this model is .25 [.04-.42], indicating that the average correaltion between any two students chosen at random within a class in their MCAS scores is r = .25. However, the wide confidence intervals indicate some uncertainty around this estiamte. Regardless, this is notable variance between teachers, and suggests the use of a multilevel model is worthwhile. The average difference between a teachers within class estimated mean and the grand mean is provided in the subsequent table. 
+
+```{r m.1, warning=FALSE, message=FALSE, include=FALSE}
+# Plots ----
+# counts of students within grades
+kable(as_data_frame(table(merged.dat$ID)))
+
+# grade 10
+# p.1 <- ggplot(aes(y = G10_Scaled, x = ID), data = m_vars) + 
+#   geom_boxplot() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+#   ggtitle("Variation in Grade 10 Scaled MCAS Scores Aross Teachers") + 
+#   labs(x="Teachers", y="Grade 10 Scaled Scores")
+# p.1
+
+# m.1 ICC ----
+
+#Create function to calculate ICC from fitted model
+calc.icc <- function(y) {
+  sumy <- summary(y)
+  (sumy$varcor$ID[1]) / (sumy$varcor$ID[1] + sumy$sigma^2)
+}
+
+# fit intercept only model
+m.1 <- lmer(g10_c ~ 1 + (1 | ID), data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.1)
+
+# get bootstrapped ICC
+calc.icc(m.1)
+#Calculate the bootstrap distribution
+boot.icc <- bootMer(m.1, calc.icc, nsim=1000)
+
+#Draw from the bootstrap distribution the usual 95% upper and lower confidence limits
+quantile(boot.icc$t, c(0.025, 0.975))
+
+# explore shift in intercept 
+kable(as_data_frame(ranef(m.1)) %>%
+ arrange(condval))
+```
+
+
+## Model 2
+
+Now, let's fit a model with just prior achievement, as we assume this variable will account for the largest share of the variance in current achievement.  
+
+### Summary 
+It can be seen that variance between teachers has changed considerably with the inclusion of this predictor. The overall psuedo-R2 for this model is .59, which indicates that prior MCAS scores are an important predictor of grade 10 MCAS scores. Results are communicated in standard deviation units, such that a 1 standard deviation difference between grade 8 MCAS scores is associated with a difference of about .75 standard deviations in grade 10 MCAS scores. 
+
+```{r m.2.1, warning=FALSE, message=FALSE, include=FALSE}
+# m.2 add prior achievement ----
+m.2 <- update(m.1, . ~ . + g8_c)
+#summary(m.2)
+#pretty_m2 <- prettify(summary(m.2))
+#kable(pretty_m2)
+summary(m.2)
+
+# R2
+r2beta(m.2,method='sgv')
+
+# test model 1 vs. model 2
+tidy(anova(m.1, m.2))
+```
+
+### Model 2 interigation
+
+Standard residual analyses:
+
+* Linearity: Model residuals vs. predictor
+
+* Homogeneity of Variance: 
+
+* The residuals of the model are normally distributed.
+
+The predicted vs. actual plot confirms what was observed with the R2 statistics above, nameley that the model already predicts grade 10 MCAS scores reasonably well. However, it is notable that there seems to be some misfit for values below the sample average of grade 10 MCAS scores. This could indicate that the model is mispecified, and needs an additional polynomial, additional variables or outliers removed. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# predicted vs. actual ---
+m_vars <- cbind(m_vars, predicted = predict(m.2), residuals = residuals(m.2))
+ggplot(m_vars, aes(x=predicted, y=g10_c)) +
+  geom_point() +
+  geom_line(aes(y=fitted(m.2)), colour="blue") +
+  theme_minimal()
+```
+
+Next, the standardized residuals vs. predicted plot is provided, which also indicates that model over predicts the value of students with low MCAS scores. 
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# plot residual vs. fitted ---
+ggplot(m_vars, aes(x=predicted, y=scale(residuals, center=TRUE))) +
+  geom_point() +
+  geom_smooth() +
+  geom_line(y=0) +
+  theme_minimal() + 
+  ggtitle("Standardized Residuals vs. Predicted") + 
+  labs(x="Predicted Values", y="Standardized Residuals", subtitle="Model 2")
+```
+
+Next, the peason residuals are plotted against the grade 8 MCAS values. This plot will look similar to the previous plot because there is only one predictor in the model. Regardless, this plot can be informative for indicating whether polynomial terms are needed in the model, for which it does appear as if a quadratic term could be necessary. 
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# linearity of predictor ---
+ggplot(data.frame(x1=m_vars$g8_c,pearson=residuals(m.2,type="pearson")),
+    aes(x=x1,y=pearson)) +
+    geom_point() +
+    geom_smooth() + 
+    theme_minimal() +
+    labs(y="Pearson Residuals", x="Grade 8 Scaled MCAS")
+```
+
+The Q-Q norm plot also indicates a violation from normality in the lower tail. Note, because the sample size was small, I simulated a normal distribution using the summary data from the grade 10 MCAS vector and plotted these q-q norm plots next to the original data so that I could be sure deviations were not due to the sample size. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# normality of the residuals ---
+qqnormsim = function(dat, dim=c(2,2)) {
+  par(mfrow=dim)
+  qqnorm(dat, col=adjustcolor("orange", 0.4), 
+         pch=19, cex=0.7, main="Normal QQ Plot (Data)")
+  qqline(dat)
+  for (i in 1:(prod(dim) - 1)) {
+    simnorm = rnorm(n=length(dat), mean=mean(dat), sd=sd(dat))
+    qqnorm(simnorm, col=adjustcolor("orange", 0.4), 
+           pch=19, cex=0.7,
+           main="Normal QQ Plot (Sim)")
+    qqline(simnorm)
+  }
+  par(mfrow=c(1, 1))
+}
+qqnormsim(m_vars$g10_c)
+```
+
+An analysis of infulential cases was carried out to eastablish if these deviations from nomality observed in the plots above was due to model mispecification or extreme values. The plot for residuals vs. influence points is drawn with a line at x = .036 to highlight potential outliers. These potential outliers are then identified. In most all cases these values exhbit values for grade 10 or grade 8 MCAS scores that are outside their respective inter-quartile ranges. This indicates these points should potenentially be removed from the analyses. 
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# influence cases ---
+
+# create influence dataframe
+influence.m.2 <- 
+tibble(lev=hatvalues(m.2),
+       pearson=residuals(m.2,type="pearson")) 
+
+# plot influencial cases
+ggplot(influence.m.2, aes(x=lev,y=scale(pearson, center=TRUE))) + 
+  geom_point() + 
+  theme_minimal() + 
+  geom_vline(xintercept = .036,  colour="blue") + 
+  ggtitle("Influencial Cases") +
+  labs(y="Pearson Standardized Residuals", x="Leverage Values", 
+       subtitle="Model 2")
+
+# select out influencial cases
+levId.m2 <- which(hatvalues(m.2) >= .035)
+levId.m2
+
+m_vars[levId.m2,c("g10_c","g8_c", "ID", "StuID")]
+summary(m_vars[,c("g10_c","g8_c")])
+```
+
+To investigate how much of a difference the removal of these cases would make to inference, a model is estimated without these values. The results indicated that the value of the coefficient woudl change by 1/2 of a standard error. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+mmLev.m2 <- lmer(g10_c ~ g8_c + (1|ID), data=m_vars[-c(levId.m2),])
+mmLevCD.m2 <- data.frame(effect=fixef(m.2),
+                     change=(fixef(mmLev.m2) - fixef(m.2)),
+                     se=sqrt(diag(vcov(m.2)))
+                     )
+rownames(mmLevCD.m2) <- names(fixef(mmLev.m2))
+mmLevCD.m2$multiples <- abs(mmLevCD.m2$change / mmLevCD.m2$se)
+mmLevCD.m2
+```
+Before settling on removing these values, let's try updating m2 with a polynomial term for MCAS scores. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# run with polynomial
+m.2.2 <- update(m.2, . ~ . + I(g8_c^2))
+m.2.2 <- update(m.2, . ~ . + log(g8_c))
+m2.2 <- lmer(sqrt(g10_c) ~ sqrt(g8_c) + (1|ID), data = m_vars)
+summary(m2.2)
+r2beta(m2.2,method='sgv')
+mcp.fnc(m2.2)
+
+
+# R2
+r2beta(m.2.2,method='sgv')
+
+# test model 1 vs. model 2
+tidy(anova(m.2, m.2.2))
+
+# linearity of predictor ---
+ggplot(data.frame(x1=m_vars$g8_c,pearson=residuals(m2.2,type="pearson")),
+    aes(x=x1,y=pearson)) +
+    geom_point() +
+    geom_smooth() + 
+    theme_minimal() +
+    labs(y="Pearson Residuals", x="Grade 8 Scaled MCAS")
+
+ggplot(m_vars, aes(x=predict(m.2.2), y=scale(residuals(m.2.2), 
+                                               center=TRUE))) +
+  geom_point() +
+  geom_smooth() +
+  geom_line(y=0) +
+  theme_minimal() + 
+  ggtitle("Standardized Residuals vs. Predicted") + 
+  labs(x="Predicted Values", y="Standardized Residuals", subtitle="Model 2")
+
+mcp.fnc(m.2.2)
+
+binnedplot(fitted(m.2.2),resid(m.2.2))
+```

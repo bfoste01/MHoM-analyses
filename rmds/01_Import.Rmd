@@ -17,10 +17,19 @@ output:
 This notebook should walk the user through the steps taken to import all of the raw data files. Despite this script typically being quite short, I find it useful to present it in the format of an R Notebook for easier reading. 
 
 ```{r}
-# Import the raw data in csv ----
-read_csv("data/") %>%
-  write.csv("data/", row.names = F)
+# Import pacakges ----
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(readr, dplyr, stringr, tidyverse)
 
+# Import the raw data in csv ----
+teacher <- read_csv("../data/teacher.csv")
+student <- read_csv("../data/student.csv")
+
+# Merge data ----
+merged.dat <- full_join(student, teacher)
+
+# Write the data
+write_rds(merged.dat, "../data/merged.dat.rds")
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.

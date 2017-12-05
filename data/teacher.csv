@@ -1,0 +1,15 @@
+ID,A_3_School,A_5_Classes,Classes_N,A_5_Classesspecify,Gender_N,Level_N,Years_N,CYears_N,PD_N,Degree_N,UMajor_N,A_10_Umajorspecify,GMajor_N,A_11_Gmajorspecify,A_1_MAX,A_2_SOS,A_3_TNP,A_4_PAT,A_5_THP,A_6_FFX,A_7_ELZ,A_8_SOL,A_9_EQU,A_10_HYB,TotalScore,Using_score,Seeking_score,Describing_Score
+Y3_09_001,Framingham HS,"e, g","Multiple, non-algebra", ,MALE,High school,6-10,6-10,High,Masters degree,Mathematics, ,Mathematics education, ,10,10,10,8,10,10,9,10,10,10,97,30,37,30
+Y3_09_002,Framingham HS,"c, e, i","Algebra, any, and multiple",Problem solving,FEMALE,High school,11-15,11-15,High,Masters degree,Mathematics, ,"Education field, non-math",Learning & Teaching,7,10,10,10,7,10,9,10,10,4,87,27,36,24
+Y3_09_003,Framingham HS,"b, d","Algebra, any, and multiple", ,FEMALE,High school,11-15,0-1,Low,Masters degree,Mathematics, ,Mathematics, ,10,7,10,10,10,10,8,10,3,10,88,27,38,23
+Y3_09_004,Framingham HS,"c, d, h","Algebra, any, and multiple", ,MALE,High school,11-15,6-10,Low,Masters degree,Mathematics, ,Mathematics education, ,0,7,8,7,10,5,8,8,10,0,63,15,30,18
+Y3_09_005,Framingham HS,"b, e, f, g","Algebra, any, and multiple", ,MALE,High school,6-10,6-10,High,Masters degree,Mathematics, ,Mathematics education, ,10,10,10,10,10,10,9,10,10,10,99,30,39,30
+Y3_09_006,Framingham HS,"b, e, f","Algebra, any, and multiple", ,FEMALE,High school,more than 20,more than 20,Medium,Masters degree,Mathematics, ,Mathematics education, ,5,10,10,10,7,10,9,10,10,10,91,25,36,30
+Y3_09_007,Framingham HS,"c, f","Algebra, any, and multiple", ,FEMALE,High school,6-10,6-10,High,Masters degree,Mathematics, ,Mathematics education, ,10,10,8,10,10,10,9,10,10,10,97,28,39,30
+Y3_09_008,Framingham HS,"c, d, e","Algebra, any, and multiple", ,FEMALE,High school,6-10,6-10,High,Masters degree,Mathematics, ,Mathematics education, ,7,10,8,10,7,10,9,10,10,10,91,25,36,30
+Y3_09_009,Framingham HS,"c, e","Algebra, any, and multiple", ,FEMALE,High school,0-1,0-1,Low,Masters degree,Mathematics, ,Mathematics education, ,10,10,10,10,10,10,8,10,3,10,91,30,38,23
+Y3_09_010,Framingham HS,"b, d, h","Algebra, any, and multiple", ,MALE,High school,2-5,2-5,Medium,Masters degree,Mathematics education, ,Mathematics education, ,10,10,10,10,10,10,8,10,10,10,98,30,38,30
+Y3_09_011,Framingham HS,"b, i","Algebra, any, and multiple",Functional Mathematics,FEMALE,High school,6-10,6-10,Medium,Masters degree,"Education field, non-math",MS/Elementary Education,"Education field, non-math",Special Education,4,0,2,0,0,3,4,9,3,2,27,6,7,14
+Y3_09_012,Framingham HS,"b, c, d","Algebra, any, and multiple", ,FEMALE,High school,2-5,0-1,Low,Masters degree,Mathematics, ,Mathematics education, ,4,7,7,10,3,10,4,10,10,0,65,18,27,20
+Y3_09_013,Framingham HS,"c, d, g","Algebra, any, and multiple", ,FEMALE,High school,6-10,6-10,Medium,Masters degree,Mathematics education, ,Mathematics education, ,4,10,10,10,10,10,9,10,10,10,93,24,39,30
+Y3_09_014,Framingham HS,"c, d, e","Algebra, any, and multiple", ,FEMALE,High school,6-10,6-10,Medium,Masters degree,Mathematics, ,"Education field, non-math",Higher Education,10,7,0,8,10,10,9,10,10,0,74,17,37,20

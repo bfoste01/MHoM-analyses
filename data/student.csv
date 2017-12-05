@@ -1,0 +1,281 @@
+ID,StuID,G8_Raw54,G8_Scaled,G8_AchLvl,G8_SGP,G10_Raw60,G10_Scaled,G10_AchLvl,G10_SGP,G10_CD,ELL_N,Lunch_N,SPED_N,Race_N
+Y3_09_001,001_1,53,280,A,67,60,280,A,88,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_001,001_2,, , ,,57,270,A,,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_002,002_1,39,246,P,25,53,266,A,86,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_002,002_2,43,254,P,25,59,274,A,98,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_002,002_3,37,242,P,7,42,260,A,14,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_002,002_4,40,248,P,89,39,256,P,29,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_002,002_5,50,268,A,87,53,266,A,44,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_1,26,220,NI,21,34,248,P,52,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_003,003_10,36,242,P,89,42,260,A,78,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_11,36,242,P,93,37,252,P,57,2,SEI,F,Not special ed,Caucasian
+Y3_09_003,003_12,34,238,NI,36,44,260,A,68,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_003,003_13,40,248,P,22,43,260,A,9,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_003,003_14,36,242,P,65,51,264,A,93,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_003,003_15,32,234,NI,5,50,264,A,83,2,,,,
+Y3_09_003,003_16,39,246,P,82,42,260,A,44,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_17,37,242,P,86,39,256,P,54,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_18,31,232,NI,58,36,250,P,52,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_003,003_19,30,230,NI,25,37,252,P,43,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_003,003_2,29,228,NI,35,40,256,P,68,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_3,37,242,P,77,39,256,P,35,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_4,26,220,NI,56,38,254,P,90,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_003,003_5,27,222,NI,54,43,260,A,94,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_003,003_6,35,240,P,69,44,260,A,79,2,SEI,P,Not special ed,Caucasian
+Y3_09_003,003_7,40,248,P,63,41,258,P,17,2,,,,
+Y3_09_003,003_8,39,246,P,77,54,266,A,98,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_003,003_9,38,244,P,77,44,260,A,61,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_1,33,236,NI,83,39,256,P,78,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_10,13,214,W,9,19,222,NI,40,1,Not enrolled in ELL,F,IEP,Caucasian
+Y3_09_004,004_11,37,242,P,60,42,260,A,47,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_12,21,218,W,52,22,228,NI,46,1,Not enrolled in ELL,F,IEP,African American
+Y3_09_004,004_13,28,224,NI,32,43,260,A,86,2,Not enrolled in ELL,F,IEP,Caucasian
+Y3_09_004,004_14,43,254,P,60,43,260,A,10,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_15,49,266,A,96,53,266,A,61,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_16,22,218a,W,81,19,222a,NI,31,1,Not enrolled in ELL,F,IEP,Caucasian
+Y3_09_004,004_17,25,220,NI,36,29,240,P,47,2,Not enrolled in ELL,R,IEP,Caucasian
+Y3_09_004,004_18,27,222,NI,75,32,244,P,70,2,,,,
+Y3_09_004,004_19,40,248,P,91,48,262,A,82,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_2,33,236,NI,6,53,266,A,93,2,,,,
+Y3_09_004,004_20,11,212,W,2,28,238,NI,88,1,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_21,32,234,NI,84,39,256,P,82,2,Not enrolled in ELL,P,IEP,African American
+Y3_09_004,004_22,23,218,W,97,31,244,P,90,2,SEI,R,Not special ed,Caucasian
+Y3_09_004,004_23,40,248,P,6,48,262,A,19,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_24,43,254,P,89,51,264,A,79,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_25,15,214,W,29,22,228,NI,64,1,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_26,47,262,A,70,57,270,A,88,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_27,40,248,P,13,50,264,A,49,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_004,004_28,47,262,A,80,55,268,A,76,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_29,26,220,NI,87,37,252,P,96,2,Opt Out,F,IEP,Caucasian
+Y3_09_004,004_3,29,228,NI,24,36,250,P,46,2,SEI,R,Not special ed,Asian
+Y3_09_004,004_30,28,224,NI,73,42,260,A,95,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_004,004_31,19,218,W,59,17,218,F,22,0,,,,
+Y3_09_004,004_32,42,252,P,59,52,264,A,74,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_004,004_33,23,218,W,50,32,244,P,71,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_34,42,252,P,94,54,266,A,97,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_35,41,250,P,69,44,260,A,37,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_36,51,270,A,90,56,268,A,61,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_37,50,268,A,74,51,264,A,10,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_004,004_38,36,242,P,65,51,264,A,93,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_39,36,242,P,16,50,264,A,78,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_4,48,264,A,99,50,264,A,53,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_004,004_40,34,238,NI,87,35,250,P,52,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_41,45,258,P,63,55,268,A,85,2,SEI,F,Not special ed,Caucasian
+Y3_09_004,004_42,23,218,W,15,32,244,P,49,2,Not enrolled in ELL,P,IEP,African American
+Y3_09_004,004_43,26,220,NI,91,26,236,NI,70,1,,,,
+Y3_09_004,004_44,41,250,P,80,39,256,P,23,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_45,23,218,W,22,36,250,P,80,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_46,24,220,NI,50,34,248,P,80,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_47,43,254,P,68,54,266,A,86,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_48,39,246,P,89,38,254,P,23,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_49,43,254,P,28,51,264,A,39,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_004,004_5,20,218,W,8,35,250,P,82,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_004,004_50,20,218,W,16,32,244,P,78,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_51,16,216,W,49,17,218,F,45,0,Not enrolled in ELL,R,IEP,Caucasian
+Y3_09_004,004_52,, , ,,50,264,A,,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_53,, , ,,41,258,P,,2,,,,
+Y3_09_004,004_6,48,264,A,70,51,264,A,19,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_004,004_7,19,218,W,42,25,234,NI,68,1,Not enrolled in ELL,P,IEP,Multiple races
+Y3_09_004,004_8,21,218,W,51,36,250,P,94,2,Not enrolled in ELL,P,IEP,African American
+Y3_09_004,004_9,45,258,P,4,55,268,A,34,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_005,005_1,53,280,A,67,59,274,A,59,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_006,006_1,52,274,A,38,60,280,A,88,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_1,47,262,A,63,53,266,A,43,2,Not enrolled in ELL,F,Not special ed,Asian
+Y3_09_007,007_10,52,274,A,84,57,270,A,51,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_11,43,254,P,5,57,270,A,75,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_12,50,268,A,43,56,268,A,34,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_13,40,248,P,87,43,260,A,50,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_14,50,268,A,,56,268,A,53,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_15,49,266,A,98,56,268,A,88,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_16,46,260,A,95,55,268,A,94,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_17,46,260,A,39,54,266,A,49,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_007,007_18,39,246,P,92,44,260,A,71,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_19,51,270,A,75,54,266,A,19,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_2,44,256,P,57,58,272,A,97,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_20,53,280,A,67,58,272,A,27,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_21,38,244,P,24,50,264,A,71,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_22,54,280,A,79,60,280,A,79,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_23,45,258,P,25,58,272,A,93,2,Not enrolled in ELL,R,Not special ed,Asian
+Y3_09_007,007_24,42,252,P,87,49,264,A,73,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_25,46,260,A,76,52,264,A,55,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_007,007_26,49,266,A,90,54,266,A,53,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_27,47,262,A,43,55,268,A,61,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_007,007_28,52,274,A,83,54,266,A,19,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_29,48,264,A,95,48,262,A,21,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_3,42,252,P,70,55,268,A,96,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_30,54,280,A,99,58,272,A,50,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_007,007_31,51,270,A,67,53,266,A,13,2,,,,
+Y3_09_007,007_32,50,268,A,88,58,272,A,86,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_007,007_33,49,266,A,70,56,268,A,63,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_34,45,258,P,92,55,268,A,92,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_35,39,246,P,77,54,266,A,98,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_36,45,258,P,69,52,264,A,62,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_37,43,254,P,77,56,268,A,97,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_38,47,262,A,49,55,268,A,62,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_39,48,264,A,18,56,268,A,36,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_4,46,260,A,41,57,270,A,85,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_40,36,242,P,89,42,260,A,78,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_41,30,230,NI,37,50,264,A,97,2,,,,
+Y3_09_007,007_42,49,266,A,26,59,274,A,85,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_43,49,266,A,86,54,266,A,51,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_44,43,254,P,32,50,264,A,36,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_45,35,240,P,49,45,262,A,72,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_007,007_46,53,280,A,89,56,268,A,22,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_47,48,264,A,60,59,274,A,96,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_007,007_48,44,256,P,6,52,264,A,26,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_49,41,250,P,44,50,264,A,59,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_5,44,256,P,14,59,274,A,96,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_50,43,254,P,41,57,270,A,94,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_007,007_51,41,250,P,33,48,262,A,41,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_007,007_52,53,280,A,74,58,272,A,37,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_53,52,274,A,38,59,274,A,62,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_54,50,268,A,53,59,274,A,86,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_55,38,244,P,3,56,268,A,86,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_56,46,260,A,60,57,270,A,91,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_57,51,270,A,51,58,272,A,63,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_58,43,254,P,31,56,268,A,87,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_59,42,252,P,8,52,264,A,38,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_007,007_6,53,280,A,74,56,268,A,14,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_60,53,280,A,80,60,280,A,92,2,Not enrolled in ELL,P,Not special ed,Multiple races
+Y3_09_007,007_61,48,264,A,18,59,274,A,85,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_62,53,280,A,85,59,274,A,74,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_63,54,280,A,98,58,272,A,43,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_64,37,242,P,57,43,260,A,44,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_65,37,242,P,23,45,262,A,47,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_007,007_66,49,266,A,72,56,268,A,65,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_67,48,264,A,95,56,268,A,88,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_68,39,246,P,21,56,268,A,96,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_69,, , ,,58,272,A,,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_007,007_7,47,262,A,40,49,264,A,10,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_70,, , ,,52,264,A,,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_8,48,264,A,45,54,266,A,38,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_007,007_9,45,258,P,54,54,266,A,61,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_008,008_1,, , ,,50,264,A,,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_009,009_1,43,254,P,54,54,266,A,79,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_10,38,244,P,97,33,246,P,49,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_009,009_11,45,258,P,13,52,264,A,26,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_12,40,248,P,8,51,264,A,50,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_009,009_13,33,236,NI,6,51,264,A,85,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_14,31,232,NI,3,49,264,A,76,2,SEI,F,Not special ed,Caucasian
+Y3_09_009,009_15,40,248,P,37,49,264,A,58,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_009,009_16,40,248,P,78,47,262,A,67,2,SEI,F,Not special ed,Caucasian
+Y3_09_009,009_17,41,250,P,26,48,262,A,35,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_18,35,240,P,55,32,244,P,7,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_009,009_19,47,262,A,36,52,264,A,20,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_2,45,258,P,88,54,266,A,91,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_20,46,260,A,99,51,264,A,83,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_21,45,258,P,57,55,268,A,72,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_22,40,248,P,73,40,256,P,16,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_009,009_23,37,242,P,85,44,260,A,77,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_009,009_24,38,244,P,83,50,264,A,89,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_25,49,266,A,56,58,272,A,82,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_009,009_26,, , ,,40,256,P,,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_009,009_3,41,250,P,7,51,264,A,40,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_009,009_4,39,246,P,10,55,268,A,86,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_5,39,246,P,50,56,268,A,98,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_009,009_6,47,262,A,54,47,262,A,6,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_009,009_7,43,254,P,48,48,262,A,31,2,,,,
+Y3_09_009,009_8,43,254,P,86,54,266,A,91,2,,,,
+Y3_09_009,009_9,38,244,P,85,45,262,A,82,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_010,010_1,34,238,NI,6,54,266,A,95,2,Not enrolled in ELL,P,IEP,Asian
+Y3_09_010,010_10,28,224,NI,40,44,260,A,91,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_010,010_11,25,220,NI,97,35,250,P,93,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_010,010_12,27,222,NI,3,39,256,P,47,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_010,010_13,33,236,NI,95,36,250,P,71,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_010,010_14,39,246,P,31,48,262,A,52,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_010,010_15,29,228,NI,55,46,262,A,97,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_010,010_16,28,224,NI,26,47,262,A,96,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_010,010_17,16,216,W,2,20,224,NI,18,1,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_010,010_18,, , ,,19,222,NI,,1,,,,
+Y3_09_010,010_19,, , ,,47,262,A,,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_010,010_2,35,240,P,98,34,248,P,57,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_010,010_3,49,266,A,96,53,266,A,61,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_010,010_4,42,252,P,32,55,268,A,87,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_010,010_5,34,238,NI,18,51,264,A,90,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_010,010_6,34,238,NI,25,47,262,A,82,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_010,010_7,43,254,P,95,41,258,P,26,2,,,,
+Y3_09_010,010_8,36,242,P,,42,260,A,49,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_010,010_9,40,248,P,92,43,260,A,70,2,Not enrolled in ELL,P,IEP,Multiple races
+Y3_09_011,011_1,, , ,,13,216,F,,0,,,,
+Y3_09_012,012_1,36,242,P,82,45,262,A,81,2,Not enrolled in ELL,F,Not special ed,Asian
+Y3_09_012,012_10,29,228,NI,82,32,244,P,59,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_012,012_11,29,228,NI,8,42,260,A,64,2,Waiver-bilingual ed,F,Not special ed,Caucasian
+Y3_09_012,012_12,30,230,NI,51,46,262,A,96,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_13,38,244,P,24,50,264,A,71,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_14,42,252,P,32,55,268,A,87,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_012,012_15,25,220,NI,72,28,238,NI,50,1,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_16,51,270,A,60,58,272,A,68,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_17,25,220,NI,63,30,242,P,64,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_18,32,234,NI,76,36,250,P,59,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_19,29,228,NI,12,34,248,P,27,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_2,15,214,W,79,17,218,F,59,0,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_012,012_20,40,248,P,30,49,264,A,49,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_21,46,260,A,96,47,262,A,46,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_22,42,252,P,80,42,260,A,18,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_012,012_23,39,246,P,89,39,256,P,41,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_012,012_24,34,238,NI,67,44,260,A,78,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_25,34,238,NI,82,46,262,A,90,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_26,34,238,NI,15,45,262,A,60,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_012,012_27,47,262,A,85,49,264,A,28,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_28,40,248,P,37,49,264,A,58,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_29,36,242,P,69,41,258,P,56,2,Not enrolled in ELL,F,IEP,Caucasian
+Y3_09_012,012_3,48,264,A,97,53,266,A,68,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_012,012_30,47,262,A,85,54,266,A,74,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_012,012_31,37,242,P,51,44,260,A,53,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_32,31,232,NI,37,38,254,P,52,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_012,012_33,28,224,NI,96,28,238,NI,65,1,Not enrolled in ELL,F,IEP,Caucasian
+Y3_09_012,012_34,29,228,NI,50,38,254,P,72,2,SEI,F,Not special ed,African American
+Y3_09_012,012_35,16,216,W,2,20,224,NI,18,1,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_012,012_4,26,220,NI,54,29,240,P,45,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_5,35,240,P,27,39,256,P,25,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_6,32,234,NI,78,46,262,A,97,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_012,012_7,28,224,NI,59,44,260,A,95,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_8,42,252,P,74,53,266,A,87,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_012,012_9,38,244,P,71,44,260,A,58,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_1,46,260,A,78,56,268,A,89,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_10,35,240,P,91,45,262,A,91,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_11,47,262,A,34,53,266,A,28,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_12,40,248,P,18,50,264,A,56,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_13,35,240,P,71,45,262,A,77,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_013,013_14,42,252,P,28,48,262,A,24,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_013,013_15,37,242,P,65,56,268,A,99,2,Not enrolled in ELL,F,Not special ed,Caucasian
+Y3_09_013,013_16,41,250,P,53,49,264,A,53,2,,,,
+Y3_09_013,013_17,45,258,P,99,54,266,A,94,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_18,37,242,P,69,42,260,A,48,2,Not enrolled in ELL,F,Not special ed,African American
+Y3_09_013,013_19,44,256,P,62,47,262,A,30,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_2,49,266,A,77,53,266,A,30,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_20,28,224,NI,26,47,262,A,96,2,Not enrolled in ELL,P,Not special ed,African American
+Y3_09_013,013_21,45,258,P,62,51,264,A,44,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_22,, , ,,55,268,A,,2,,,,
+Y3_09_013,013_23,, , ,,49,264,A,,2,,,,
+Y3_09_013,013_3,45,258,P,61,52,264,A,55,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_4,43,254,P,41,55,268,A,85,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_5,46,260,A,99,45,262,A,40,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_013,013_6,44,256,P,48,55,268,A,83,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_7,37,242,P,26,43,260,A,35,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_8,46,260,A,75,52,264,A,56,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_013,013_9,47,262,A,65,54,266,A,57,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_1,40,248,P,89,52,264,A,94,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_2,36,242,P,30,49,264,A,80,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_3,42,252,P,69,50,264,A,67,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_4,29,228,NI,53,57,270,A,99,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_5,38,244,P,15,39,256,P,4,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_6,37,242,P,61,55,268,A,99,2,SEI,P,Not special ed,Caucasian
+Y3_09_014,014_7,41,250,P,40,53,266,A,78,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_014,014_8,48,264,A,11,55,268,A,21,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_014,014_9,49,266,A,90,50,264,A,17,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_10,25,220,NI,90,37,252,P,97,2,SEI,P,Not special ed,Caucasian
+Y3_09_014,014_11,42,252,P,32,57,270,A,94,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_12,40,248,P,33,46,262,A,29,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_13,49,266,A,96,53,266,A,60,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_14,37,242,P,37,55,268,A,99,2,Not enrolled in ELL,P,Not special ed,Asian
+Y3_09_014,014_15,34,238,NI,21,53,266,A,96,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_014,014_16,45,258,P,99,43,260a,A,38,2,Not enrolled in ELL,P,IEP,Caucasian
+Y3_09_014,014_17,38,244,P,77,44,260,A,61,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_18,35,240,P,7,44,260,A,33,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_19,41,250,P,53,52,264,A,74,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_20,44,256,P,83,42,260,A,12,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_21,54,280,A,96,54,266,A,5,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_22,41,250,P,63,52,264,A,85,2,Not enrolled in ELL,R,Not special ed,Caucasian
+Y3_09_014,014_23,43,254,P,80,43,260,A,19,2,Not enrolled in ELL,P,Not special ed,Caucasian
+Y3_09_014,014_24,41,250,P,82,51,264,A,90,2,Not enrolled in ELL,R,Not special ed,Caucasian
