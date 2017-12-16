@@ -7,25 +7,33 @@ output:
     theme: paper
     toc: true
     toc_float: true
+    code_folding: hide
 ---
 
-Load the necessary packages for analyses, as well as the merged data. 
+Load the data and pacakges necessary for analyses.  
 ```{r import, warning=FALSE, message=FALSE, include=FALSE}
 # Load packages ----
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(readr, dplyr, stringr, tidyverse, lme4, ggthemes,
                knitr, lattice, MASS, car, sjPlot, lsmeans, gridExtra,
                LMERConvenienceFunctions, HLMdiag, plyr, nullabor, papeR,
-               DHARMa, MuMIn, r2glmm, broom)
+               DHARMa, MuMIn, r2glmm, broom, knitr, merTools, merTools,
+               influence.ME, lmeresampler, boot, kableExtra, pander,
+               r2glmm, sjPlot, sjmisc, sjlabelled, RColorBrewer, memisc, 
+               lmerTest, robustlmm)
 
 # Read in the data ----
 merged.dat <- read_rds("../data/merged.dat.rds")
 
 # Subset out the variables needed ----
-colnames(merged.dat)
-sapply(merged.dat, class)
-numeric.vars <- c("G10_Scaled", "G8_Scaled")
-factor.vars <- c("ID")
+
+#colnames(merged.dat)
+#sapply(merged.dat, class)
+numeric.vars <- c("G10_Scaled", "G8_Scaled", "TotalScore", "Using_score", "Seeking_score", 
+                  "Describing_Score")
+factor.vars <- c("ID", "ELL_N", "Lunch_N", "SPED_N", "Race_N", "Gender_N", "Level_N", 
+                 "Degree_N", "CYears_N", "PD_N")
+
 # convert to class
 merged.dat[,numeric.vars] <- lapply(merged.dat[,numeric.vars], as.numeric)
 merged.dat[,factor.vars] <- lapply(merged.dat[,factor.vars], factor)
@@ -34,23 +42,41 @@ merged.dat[,factor.vars] <- lapply(merged.dat[,factor.vars], factor)
 m_vars <- na.omit(merged.dat %>%
   dplyr::select(ID, StuID, G8_Scaled, G10_Scaled, 12:15, 18, 20:26, 40:43))
 
-# munge to center
-## centered?
-ctr <- function(v, ...)
-    (v - mean(v, ...) ) / sd(v, ...)
+# center covariates
+m_vars$g8_c <- as.numeric(scale(m_vars$G8_Scaled, center=TRUE))
+m_vars$g10_c <- as.numeric(scale(m_vars$G10_Scaled, center=TRUE))
+m_vars$TotalScore_c <- as.numeric(scale(m_vars$TotalScore, center=TRUE))
+m_vars$Using_score_c <- as.numeric(scale(m_vars$Using_score, center=TRUE))
+m_vars$Seeking_score_c <- as.numeric(scale(m_vars$Seeking_score, center=TRUE))
+m_vars$Describing_Score_c <- as.numeric(scale(m_vars$Describing_Score, center=TRUE))
 
-m_vars <- within(m_vars, {
-    g8_c <- ctr(G8_Scaled)
-    g10_c <- ctr(G10_Scaled)
-})
 
+# check levels of factor
+table(m_vars$ELL_N) # limited information collpase categories
+m_vars <- m_vars %>%
+  mutate(ELL_recode = ELL_N) 
+# sapply(m_vars, class)
+# recode values
+m_vars$ELL_recode <- memisc::recode(m_vars$ELL_recode,
+                 "No ELL" <- "Not enrolled in ELL", 
+                 "OTHER" <- c("Opt Out", "Waiver-bilingual ed"), # set to mising because to few cases
+                 "SEI" <- "SEI")
+table(m_vars$ELL_recode)
+#sapply(m_vars, class)
+# table(m_vars$SPED_N)
+# table(m_vars$Race_N)
+# table(m_vars$Gender_N)
 ```
 
 ## Null Model
 
-Examine the variance in the outcome between teachers. First, let's look at the number of students within each class to see if variance estimates can be easily generated. Four teachers have only one student, which could be problematic. The ICC for this model is .25 [.04-.42], indicating that the average correaltion between any two students chosen at random within a class in their MCAS scores is r = .25. However, the wide confidence intervals indicate some uncertainty around this estiamte. Regardless, this is notable variance between teachers, and suggests the use of a multilevel model is worthwhile. The average difference between a teachers within class estimated mean and the grand mean is provided in the subsequent table. 
+This first model explores the variance in the outcome that can be attributed to the nested structure of the data. Key outcome of interest is the ICC statistic, which establishes the correlation in MCAS scores between any two students chosen at random within a class. 
 
-```{r m.1, warning=FALSE, message=FALSE, include=FALSE}
+
+### Model summary
+Results below show the number of students in each class, which can provide context for the estimates of teacher-level variance. Results indicate that four teachers have only one student, which could be problematic. The ICC for this model is .25 [.04-.42], indicating that the average correaltion between any two students chosen at random within a class in their MCAS scores is r = .25. However, the wide confidence intervals indicate some uncertainty around this estiamte. Regardless, this is notable variance between teachers, and suggests the use of a multilevel model is worthwhile. The average difference between a teachers within class estimated mean and the grand mean is provided in the subsequent table. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
 # Plots ----
 # counts of students within grades
 kable(as_data_frame(table(merged.dat$ID)))
@@ -72,101 +98,58 @@ calc.icc <- function(y) {
 }
 
 # fit intercept only model
-m.1 <- lmer(g10_c ~ 1 + (1 | ID), data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+m.1 <- lmer(g10_c ~ 1 + (1 | ID), data=m_vars, REML=FALSE, verbose=1, 
+            na.action = "na.omit")
 summary(m.1)
 
-# get bootstrapped ICC
-calc.icc(m.1)
-#Calculate the bootstrap distribution
+# bootstrap confidence intervals 
 boot.icc <- bootMer(m.1, calc.icc, nsim=1000)
+m.1.icc.boot <- quantile(boot.icc$t, c(0.025, 0.975))
 
-#Draw from the bootstrap distribution the usual 95% upper and lower confidence limits
-quantile(boot.icc$t, c(0.025, 0.975))
+# get bootstrapped ICC
+tibble(
+  ICC = calc.icc(m.1),
+  "Lower 95%" = m.1.icc.boot[1],
+  "Upper 95%" = m.1.icc.boot[2]
+)
 
 # explore shift in intercept 
-kable(as_data_frame(ranef(m.1)) %>%
- arrange(condval))
+m.1.intercepts <- as_data_frame(ranef(m.1)) %>%
+ arrange(condval)
+
+kable(m.1.intercepts, digits = 3, 
+      format="html", caption="Variation in average 10th grade MCAS scores between teachers")
 ```
 
+### Interogation of model assumptions
 
-## Model 2
+Using the Hox (2010) method, assumptions of the model are examined first with intercept-only model for the presence of gross violations. 
 
-Now, let's fit a model with just prior achievement, as we assume this variable will account for the largest share of the variance in current achievement.  
+These assumptions inculde:
 
-### Summary 
-It can be seen that variance between teachers has changed considerably with the inclusion of this predictor. The overall psuedo-R2 for this model is .59, which indicates that prior MCAS scores are an important predictor of grade 10 MCAS scores. Results are communicated in standard deviation units, such that a 1 standard deviation difference between grade 8 MCAS scores is associated with a difference of about .75 standard deviations in grade 10 MCAS scores. 
+* Normality of the residuals at level-1 and level-2: This can be examined through qq-norm plots of the residuals, standardized residuals vs. normal value plots, standardized rediduals vs. predicted plots. 
 
-```{r m.2.1, warning=FALSE, message=FALSE, include=FALSE}
-# m.2 add prior achievement ----
-m.2 <- update(m.1, . ~ . + g8_c)
-#summary(m.2)
-#pretty_m2 <- prettify(summary(m.2))
-#kable(pretty_m2)
-summary(m.2)
+* Equal variance of the residual erros in all groups: This can be examined with a one way analysis of variance on the absolute values of the residuals. 
 
-# R2
-r2beta(m.2,method='sgv')
+Issues in any of these follow-up analyses are typically fixed by removing outliers, applying a normalizing transformation to the outcome, or including dummy variables in the subsequent regression to idnetify outlier groups. 
 
-# test model 1 vs. model 2
-tidy(anova(m.1, m.2))
-```
 
-### Model 2 interigation
+*Exploring normality of the residuals at level-1:*
 
-Standard residual analyses:
-
-* Linearity: Model residuals vs. predictor
-
-* Homogeneity of Variance: 
-
-* The residuals of the model are normally distributed.
-
-The predicted vs. actual plot confirms what was observed with the R2 statistics above, nameley that the model already predicts grade 10 MCAS scores reasonably well. However, it is notable that there seems to be some misfit for values below the sample average of grade 10 MCAS scores. This could indicate that the model is mispecified, and needs an additional polynomial, additional variables or outliers removed. 
+QQ-norm plot of the resiudals, with associated confidence band. Note, because these are 95% confidence bands, we expect about 13 students to fall outside the bands (i.e., .05 * 254 students). Note, because the sample size was small, I simulated a normal distribution using the summary data from the grade 10 MCAS vector and plotted these q-q norm plots next to the original data so that I could be sure deviations were not due to the sample size. It is obvious when looking at these plots which one is not like the other (i.e., is the actual q-q norm plot for the model). Like the plot above, problematic data points are the individuals who score low on the MCAS. These deviations can be due to a number of factors, such as: the presence of outliers, the need to transform the outcome variable, the presence of missing covariates, etc. The plots indicate some potential issues with normality, with more than 13 students falling outside of the confidence intervals. 
 
 ```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-# predicted vs. actual ---
-m_vars <- cbind(m_vars, predicted = predict(m.2), residuals = residuals(m.2))
-ggplot(m_vars, aes(x=predicted, y=g10_c)) +
-  geom_point() +
-  geom_line(aes(y=fitted(m.2)), colour="blue") +
-  theme_minimal()
-```
+qq.plot(residuals(m.1, type='pearson'))
 
-Next, the standardized residuals vs. predicted plot is provided, which also indicates that model over predicts the value of students with low MCAS scores. 
-```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-# plot residual vs. fitted ---
-ggplot(m_vars, aes(x=predicted, y=scale(residuals, center=TRUE))) +
-  geom_point() +
-  geom_smooth() +
-  geom_line(y=0) +
-  theme_minimal() + 
-  ggtitle("Standardized Residuals vs. Predicted") + 
-  labs(x="Predicted Values", y="Standardized Residuals", subtitle="Model 2")
-```
-
-Next, the peason residuals are plotted against the grade 8 MCAS values. This plot will look similar to the previous plot because there is only one predictor in the model. Regardless, this plot can be informative for indicating whether polynomial terms are needed in the model, for which it does appear as if a quadratic term could be necessary. 
-```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-# linearity of predictor ---
-ggplot(data.frame(x1=m_vars$g8_c,pearson=residuals(m.2,type="pearson")),
-    aes(x=x1,y=pearson)) +
-    geom_point() +
-    geom_smooth() + 
-    theme_minimal() +
-    labs(y="Pearson Residuals", x="Grade 8 Scaled MCAS")
-```
-
-The Q-Q norm plot also indicates a violation from normality in the lower tail. Note, because the sample size was small, I simulated a normal distribution using the summary data from the grade 10 MCAS vector and plotted these q-q norm plots next to the original data so that I could be sure deviations were not due to the sample size. 
-
-```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-# normality of the residuals ---
+# simulate for visuals
 qqnormsim = function(dat, dim=c(2,2)) {
   par(mfrow=dim)
-  qqnorm(dat, col=adjustcolor("orange", 0.4), 
+  qqnorm(dat, col=adjustcolor("orange", 0.4),
          pch=19, cex=0.7, main="Normal QQ Plot (Data)")
   qqline(dat)
   for (i in 1:(prod(dim) - 1)) {
     simnorm = rnorm(n=length(dat), mean=mean(dat), sd=sd(dat))
-    qqnorm(simnorm, col=adjustcolor("orange", 0.4), 
+    qqnorm(simnorm, col=adjustcolor("orange", 0.4),
            pch=19, cex=0.7,
            main="Normal QQ Plot (Sim)")
     qqline(simnorm)
@@ -176,80 +159,717 @@ qqnormsim = function(dat, dim=c(2,2)) {
 qqnormsim(m_vars$g10_c)
 ```
 
-An analysis of infulential cases was carried out to eastablish if these deviations from nomality observed in the plots above was due to model mispecification or extreme values. The plot for residuals vs. influence points is drawn with a line at x = .036 to highlight potential outliers. These potential outliers are then identified. In most all cases these values exhbit values for grade 10 or grade 8 MCAS scores that are outside their respective inter-quartile ranges. This indicates these points should potenentially be removed from the analyses. 
+Here the standardized residuals vs. fitted plot is provided, which shows some dispersion of the variance for students with low MCAS scores, indicating that the model over predicts the MCAS scores for these students. 
+
 ```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-# influence cases ---
-
-# create influence dataframe
-influence.m.2 <- 
-tibble(lev=hatvalues(m.2),
-       pearson=residuals(m.2,type="pearson")) 
-
-# plot influencial cases
-ggplot(influence.m.2, aes(x=lev,y=scale(pearson, center=TRUE))) + 
-  geom_point() + 
+# plot residual vs. fitted ---
+m_vars <- cbind(m_vars, predicted.m1 = predict(m.1), resid.m1 = residuals(m.1, type="response"), 
+                std.resid.m1 = residuals(m.1, type="pearson"))
+ggplot(m_vars, aes(x=predicted.m1, y=std.resid.m1)) +
+  geom_point(position = position_jitter(w = 0.05, h = 0)) +
+  #geom_smooth() +
+  geom_line(y=0) +
   theme_minimal() + 
-  geom_vline(xintercept = .036,  colour="blue") + 
-  ggtitle("Influencial Cases") +
-  labs(y="Pearson Standardized Residuals", x="Leverage Values", 
-       subtitle="Model 2")
-
-# select out influencial cases
-levId.m2 <- which(hatvalues(m.2) >= .035)
-levId.m2
-
-m_vars[levId.m2,c("g10_c","g8_c", "ID", "StuID")]
-summary(m_vars[,c("g10_c","g8_c")])
+  ggtitle("Standardized residuals vs. fitted") + 
+  labs(x="Predicted Values", y="Standardized Residuals", subtitle="Homogeneity of variance for model 2")
 ```
 
-To investigate how much of a difference the removal of these cases would make to inference, a model is estimated without these values. The results indicated that the value of the coefficient woudl change by 1/2 of a standard error. 
+Box plots for the level-1 residuals. Outliers clearly present for low MCAS scorers. 
 
 ```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-mmLev.m2 <- lmer(g10_c ~ g8_c + (1|ID), data=m_vars[-c(levId.m2),])
-mmLevCD.m2 <- data.frame(effect=fixef(m.2),
-                     change=(fixef(mmLev.m2) - fixef(m.2)),
-                     se=sqrt(diag(vcov(m.2)))
-                     )
-rownames(mmLevCD.m2) <- names(fixef(mmLev.m2))
-mmLevCD.m2$multiples <- abs(mmLevCD.m2$change / mmLevCD.m2$se)
-mmLevCD.m2
+p1.m.1 <- ggplot(m_vars, aes(x="std.resid.m1", y=std.resid.m1))+
+  geom_boxplot(outlier.colour = "red", outlier.shape = 1, outlier.alpha = .5) +
+  ggtitle("Boxplot of the level-1 residuals") +
+  labs(x="MCAS Scores Grade 10", y="Standardized Residuals")
+p1.m.1 + theme_minimal()
+# subset out the individuals 
 ```
-Before settling on removing these values, let's try updating m2 with a polynomial term for MCAS scores. 
+
+*Equal variance of the residual erros in all groups:*
+
+Run a levene's test for the absolute value of the residuals by "ID." Note, since the assumption is that the variance is not going to differ, we would hope to see NO STATISTICAL DIFFERENCES in the following procedure (i.e. p>0.05). Results indicate that the varinces aren't equal across groups. This is likely due to the sample size of students in classes. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# level 2
+#for this portion of the analysis, we need to revisit about statistical significance - since the assumption is that the variance is not going to differ, we would hope to see NO STATISTICAL DIFFERENCES in the following procedure (i.e. p>0.05) to confirm that -
+m_vars$abs.m1.res <-abs(m_vars$resid.m1) #creates a new column with the absolute value of the residuals
+m_vars$abs.m1.res2 <- m_vars$abs.m1.res^2 #squares the absolute values of the residuals to provide the more robust estimate
+levene.model.m.1 <- lm(abs.m1.res2 ~ ID, data=m_vars) #ANOVA of the squared residuals
+tidy(anova(levene.model.m.1)) #displays the results
+```
+
+*Level-2 Random Effects*
+
+QQ-norm plot of level-2 random effects looks good. Teachers 9 through 11 have more variance student 10th grade MCAS scores. Might need to followup. What's clear is that issues with the model are at L-1. So, let's try and remove outliers and see if things change. 
 
 ```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
-# run with polynomial
-m.2.2 <- update(m.2, . ~ . + I(g8_c^2))
-m.2.2 <- update(m.2, . ~ . + log(g8_c))
-m2.2 <- lmer(sqrt(g10_c) ~ sqrt(g8_c) + (1|ID), data = m_vars)
-summary(m2.2)
-r2beta(m2.2,method='sgv')
-mcp.fnc(m2.2)
+# qq plot
+ranef.m1 <- as_data_frame(ranef(m.1, condVar=TRUE))
+qq.plot(ranef.m1$condval)
+```
 
+*Level-1 Outlier Analysis*
 
-# R2
-r2beta(m.2.2,method='sgv')
+First, we will pull out the individuals with standardized residuals > 2.5, which is how `LMERConvenienceFunctions` works. Results show all of the outlier cases come from teacher 4, 12, 10. Not surprisngly, based on the residual plots above, these cases also are among the lowest scores on the MCAS.
 
-# test model 1 vs. model 2
-tidy(anova(m.2, m.2.2))
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+m.1.outliers <- m_vars[which(abs(m_vars$std.resid.m1) > 1.96),] # Get the rows which absolute residuals > 2.5
 
-# linearity of predictor ---
-ggplot(data.frame(x1=m_vars$g8_c,pearson=residuals(m2.2,type="pearson")),
-    aes(x=x1,y=pearson)) +
-    geom_point() +
-    geom_smooth() + 
-    theme_minimal() +
-    labs(y="Pearson Residuals", x="Grade 8 Scaled MCAS")
+# convert to df
+m.1.outliers <- as_data_frame(m.1.outliers)
 
-ggplot(m_vars, aes(x=predict(m.2.2), y=scale(residuals(m.2.2), 
-                                               center=TRUE))) +
-  geom_point() +
+# create tidy table for outliers per teacher
+kable(tidy(table(m.1.outliers$ID)) %>%
+  arrange(-Freq) %>%
+  dplyr::rename(ID=Var1, "Outlier Count" = Freq),
+  caption="Number of outliers for each teacher") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", full_width = T))
+
+# create tidy table for MCAS scores
+kable(tidy(table(m.1.outliers$G8_Scaled)) %>%
+        dplyr::rename("Grade 10 MCAS score"=Var1)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", full_width = T))
+```
+
+Let's try removing them from the analyses to see if that fixes things. You'll notice that the results look similar, and the problems remain with respect to the non-normaliry of the L-1 residuals. The easiest way to ensure that standard errors are not biased is to utilize a non-parametric bootstrap in downstream analyses. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# remove the outliers
+to.remove <- c(m.1.outliers$StuID)
+m_vars_no_outliers <- m_vars[!m_vars$StuID %in% to.remove,]
+
+# refit the model
+# fit intercept only model
+m.1.refit.1 <- lmer(g10_c ~ 1 + (1 | ID), data=m_vars_no_outliers, REML=FALSE, verbose=1, 
+            na.action = "na.omit")
+summary(m.1.refit.1)
+
+# get bootstrapped ICC
+tibble(
+  ICC = calc.icc(m.1.refit.1)
+)
+
+#Calculate the bootstrap distribution
+boot.icc.mi.refit <- bootMer(m.1.refit.1, calc.icc, nsim=1000)
+
+#Draw from the bootstrap distribution the usual 95% upper and lower confidence limits
+quantile(boot.icc.mi.refit$t, c(0.025, 0.975))
+
+# Check the residuals
+qq.plot(residuals(m.1.refit.1, type='pearson'))
+
+# simulate for visuals
+qqnormsim = function(dat, dim=c(2,2)) {
+  par(mfrow=dim)
+  qqnorm(dat, col=adjustcolor("orange", 0.4),
+         pch=19, cex=0.7, main="Normal QQ Plot (Data)")
+  qqline(dat)
+  for (i in 1:(prod(dim) - 1)) {
+    simnorm = rnorm(n=length(dat), mean=mean(dat), sd=sd(dat))
+    qqnorm(simnorm, col=adjustcolor("orange", 0.4),
+           pch=19, cex=0.7,
+           main="Normal QQ Plot (Sim)")
+    qqline(simnorm)
+  }
+  par(mfrow=c(1, 1))
+}
+qqnormsim(m_vars_no_outliers$g10_c)
+
+# plot residual vs. fitted ---
+ggplot(m_vars_no_outliers, aes(x=predict(m.1.refit.1), y=residuals(m.1.refit.1, type="pearson"))) +
+  geom_point(position = position_jitter(w = 0.05, h = 0)) +
   geom_smooth() +
   geom_line(y=0) +
   theme_minimal() + 
-  ggtitle("Standardized Residuals vs. Predicted") + 
-  labs(x="Predicted Values", y="Standardized Residuals", subtitle="Model 2")
+  ggtitle("Standardized residuals vs. fitted") + 
+  labs(x="Predicted Values", y="Standardized Residuals", subtitle="Homogeneity of variance for model 2")
 
-mcp.fnc(m.2.2)
+ggplot(m.1.refit.1, aes(x="std.resid.m1", y=std.resid.m1))+
+  geom_boxplot(outlier.colour = "red", outlier.shape = 1, outlier.alpha = .5) +
+  ggtitle("Boxplot of the level-1 residuals") +
+  labs(x="MCAS Scores Grade 10", y="Standardized Residuals")
+```
 
-binnedplot(fitted(m.2.2),resid(m.2.2))
+### Final model with bias corrections
+
+Final null model with nonparametric bootstrap corrected standard errors. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# function to pull parts of lmer object for bootstrap
+mySumm <- function(.) {
+      s <- getME(., "sigma")
+        c(beta = getME(., "beta"), sigma = s, sig01 = unname(s * getME(., "theta")))
+}
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+boot.m.1 <- bootstrap(model = m.1, fn = mySumm, type = "case", B = 500, resample = c(TRUE, FALSE))
+
+#bootstrap confidence intervals
+#boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+
+boot.m.1.summary <-summary(boot.m.1)
+
+# tibble for summary bootstrap estimates
+boot.m.1.summary.tib <- tibble(
+  Variable = c("Intercept"),
+  "Original Estimate" = c(boot.m.1.summary[1,2]),
+  "Median Bootstrap Estimate" = c(boot.m.1.summary[1,5]), 
+  "Bootstrap SE" = c(boot.m.1.summary[1,4]), 
+  "Bias" = c(boot.m.1.summary[1, 3]))
+
+# print the tibble as html object 
+kable(boot.m.1.summary.tib, digits = 3, format="html", 
+      caption="Non-parametric bootstrap estimates for the null model") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", full_width = T))
+```
+
+## Model 2: Prior achievement 
+
+The next model investigates the association between prior MCAS achievement and current acheivement. Prior MCAS scores are entered into the model first because it is assumed that they will acount for the largest share of vairance in current MCAS scores. 
+
+### Model summary
+
+Not surprisingly, results show that grade 8 MCAS scores is a significant predictor of grade 10 MCAS scores. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# fit the model ----
+m.2 <- lmer(g10_c ~ g8_c + (1 | ID), data=m_vars, REML=FALSE, verbose=1, 
+            na.action = "na.omit")
+summary(m.2)
+
+# bias corrected standard errors ----
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+boot.m.2 <- bootstrap(model = m.2, fn = mySumm, type = "case", B = 500, 
+                      resample = c(TRUE, FALSE))
+
+#bootstrap confidence intervals
+#boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+
+boot.m.2.summary <- summary(boot.m.2)
+
+# tibble for summary bootstrap estimates
+boot.m.2.summary.tib <- tibble(
+  Variable = c("Intercept", "Grade 10 MCAS"),
+  "Original Estimate" = c(boot.m.2.summary[1,2], boot.m.2.summary[2,2]),
+  "Median Bootstrap Estimate" = c(boot.m.2.summary[1,5], boot.m.2.summary[2,5]), 
+  "Bootstrap SE" = c(boot.m.2.summary[1,4], boot.m.2.summary[2,4]), 
+  "Bias" = c(boot.m.2.summary[1, 3], boot.m.2.summary[2, 3]))
+
+# print the tibble as html object 
+kable(boot.m.2.summary.tib, digits = 3, format="html", 
+      caption="Non-parametric bootstrap estimates for the null model") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+```
+
+As such, the model which included prior achievement fit better than the null model. 
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# testing fit of model 2 against model 1 --- 
+tidy(anova(m.2, m.1))
+```
+
+Further, the proprotion of variance explained by model 2, as established using Nakagawa and Schielzeth's (2013) method, was 59%. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+#  Proportion variance explained ---- 
+# r2nsj: the proportion of variance explained by the fixed predictors. This statistic is a simplified version of Rβ2 that can be used as a substitute for models fitted to very large datasets.
+r2nsj.m2 <- r2beta(m.2, method = 'nsj', partial = TRUE)
+
+# print the table
+kable(as_data_frame(r2nsj.m2) , digits = 3, format="html", 
+      caption="The Nakagawa and Schielzeth (2013) method for calculating the proportion of variance explained by the fixed predictors") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# #  Proportion variance explained at level-1 after addition of a level-2 predictor
+# summary(m.1)
+# summary(m.2)
+# m.1.l1.resid <- 0.7275
+# m.1.l2.resid <- 0.2430
+# m.2.l1.resid <- 0.37995
+# m.2.l2.resid <- 0.02204
+# (m.1.l1.resid-m.2.l1.resid)/m.1.l1.resid
+# 
+# #  Proportion variance explained at level-2 after addition of a level-2 predictor
+# (m.1.l2.resid-m.2.l2.resid)/m.1.l2.resid
+```
+Useful plots for the model are found below. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# plots ----
+
+# set the theme in sjplot
+set_theme(base = theme_minimal())
+# sjp.lmer(m.2, sort.est = "sort.all", y.offset = .4)
+
+# fixed effects plot
+p.m.2.fe <- sjp.lmer(m.2, type = "fe", axis.lim = c(-2, 2))
+
+# add additional plot themes
+p.m.2.fe$plot + ggtitle("Fixed effects for model 2") + labs(x="Parameter Estimate", y="Fixed Effects", colour = "Teacher ID")
+
+# variation in the slope across teachers
+p.m.2.riSlope <- sjp.lmer(m.2, type = "ri.slope")
+
+# add additional plot elements 
+p.m.2.riSlope$plot[[1]] + ggtitle("Slope for grade 8 MCAS") + 
+  scale_fill_brewer(palette="Set2") + 
+  labs(subtitle="Fixed effects depending on teacher", x="Grade 8 MCAS Scores", 
+       y="Grade 10 MCAS Scores", colour = "Teacher ID") 
+
+# geom.colors = "PuRd" ggplot
+```
+
+### Exploring a quadratic effect
+
+Next, a quadratic effect is added to the model for 10th grade MCAS scores. Results indicate a significant effect for quadratic MCAS, with the overall model fitting better than model 2, with just a linear MCAS effect. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# create poynomial 
+m_vars$g8_c2<- m_vars$g8_c^2
+
+# fit model
+m.2b <- lmer(g10_c ~ g8_c + g8_c2 + (1 | ID), data=m_vars, REML=FALSE, verbose=1, 
+            na.action = "na.omit")
+summary(m.2b)
+
+# bias corrected standard errors ----
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+boot.m.2b <- bootstrap(model = m.2b, fn = mySumm, type = "case", B = 500, 
+                      resample = c(TRUE, FALSE))
+
+#bootstrap confidence intervals
+#boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+
+boot.m.2b.summary <- summary(boot.m.2b)
+boot.m.2b.summary
+
+# tibble for summary bootstrap estimates
+boot.m.2b.summary.tib <- tibble(
+  Variable = c("Intercept", "Grade 10 MCAS", "Grade 10 MCAS Quadratic"),
+  "Original Estimate" = c(boot.m.2b.summary[1,2], boot.m.2b.summary[2,2], 
+                          boot.m.2b.summary[3,2]),
+  "Median Bootstrap Estimate" = c(boot.m.2b.summary[1,5], boot.m.2b.summary[2,5], 
+                                  boot.m.2b.summary[3,5]), 
+  "Bootstrap SE" = c(boot.m.2b.summary[1,4], boot.m.2b.summary[2,4], 
+                     boot.m.2b.summary[3,4]), 
+  "Bias" = c(boot.m.2b.summary[1, 3], boot.m.2b.summary[2, 3],
+             boot.m.2b.summary[3, 3]))
+
+# print the tibble as html object 
+kable(boot.m.2b.summary.tib, digits = 3, format="html", 
+      caption="Non-parametric bootstrap estimates for the null model") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# test the model fit against m.2
+anova(m.2b, m.2)
+```
+
+Proportion of variance in the outcome attributed to the quadratic trend is roughly 16%. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+#  Proportion variance explained ---- 
+# r2nsj: the proportion of variance explained by the fixed predictors. This statistic is a simplified version of Rβ2 that can be used as a substitute for models fitted to very large datasets.
+r2nsj.m2b <- r2beta(m.2b, method = 'nsj', partial = TRUE)
+
+# print the table
+kable(as_data_frame(r2nsj.m2b) , digits = 3, format="html", 
+      caption="The Nakagawa and Schielzeth (2013) method for calculating the proportion of variance explained by the fixed predictors") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# #  Proportion variance explained at level-1 after addition of a level-2 predictor
+# summary(m.1)
+# summary(m.2)
+# m.1.l1.resid <- 0.7275
+# m.1.l2.resid <- 0.2430
+# m.2.l1.resid <- 0.37995
+# m.2.l2.resid <- 0.02204
+# (m.1.l1.resid-m.2.l1.resid)/m.1.l1.resid
+# 
+# #  Proportion variance explained at level-2 after addition of a level-2 predictor
+# (m.1.l2.resid-m.2.l2.resid)/m.1.l2.resid
+```
+
+A plot of the quadratic trend. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+ggplot(m_vars, aes(y=g10_c, x=g8_c2)) + 
+  geom_point(alpha = .5) + 
+  stat_smooth(method = "lm", formula = y ~ poly(x,2)) + 
+  theme_minimal() +
+  ggtitle("Quadratic Effect for Grade 8 MCAS") + 
+  labs(y="Grade 10 MCAS Scores", x="Quadratic Grade 8 MCAS")
+```
+
+## Model 3: Prior achievement + student characteristics 
+
+The next model investigates the association between prior MCAS achievement and other student characteristics with current acheivement. 
+
+### Model summary
+Results show a significant positive effect for students who are not special education, indicating that these students score almost 1/2 a standard deviation higher on the outcome than their peers with IEP statuses. There are some significant effects for ELL status, but it is hard to take stock in these results with so few students being ELL. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# fit model ----
+m.3 <- lmer(g10_c ~ g8_c + g8_c2 + ELL_recode + Lunch_N + SPED_N + 
+              relevel(Race_N, ref="Caucasian") + (1 | ID), 
+            data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.3)
+
+# bias corrected standard errors ----
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+# boot.m.3 <- bootstrap(model = m.3, fn = mySumm, type = "case", B = 500, 
+#                       resample = c(TRUE, FALSE))
+# 
+# #bootstrap confidence intervals
+# #boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+# 
+# boot.m.3.summary <- summary(boot.m.3)
+# boot.m.3.summary
+# # tibble for summary bootstrap estimates
+# boot.m.3.summary.tib <- tibble(
+#   Variable = c("Intercept", "Grade 10 MCAS"),
+#   "Original Estimate" = c(boot.m.3.summary[1,2], boot.m.3.summary[2,2]),
+#   "Median Bootstrap Estimate" = c(boot.m.3.summary[1,5], boot.m.3.summary[2,5]), 
+#   "Bootstrap SE" = c(boot.m.3.summary[1,4], boot.m.3.summary[2,4]), 
+#   "Bias" = c(boot.m.3.summary[1, 3], boot.m.3.summary[2, 3]))
+# 
+# # print the tibble as html object 
+# kable(boot.m.2.summary.tib, digits = 3, format="html", 
+#       caption="Non-parametric bootstrap estimates for the null model") %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+#                                       full_width = T))
+# 
+# 
+# fctr <- lapply(m_vars[sapply(m_vars, is.factor)], droplevels)
+# ## count levels
+# sapply(fctr, nlevels)
+
+tidy(anova(m.3, m.2b))
+```
+
+Overall, the model accounts for about 68% of the variance in outcomes, with the relative contribution of the student covariates being very small, even for SPED status. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+#  Proportion variance explained ---- 
+# r2nsj: the proportion of variance explained by the fixed predictors. This statistic is a simplified version of Rβ2 that can be used as a substitute for models fitted to very large datasets.
+r2nsj.m3 <- r2beta(m.3, method = 'nsj', partial = TRUE)
+
+# print the table
+kable(as_data_frame(r2nsj.m3) , digits = 3, format="html", 
+      caption="The Nakagawa and Schielzeth (2013) method for calculating the proportion of variance explained by the fixed predictors") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# #  Proportion variance explained at level-1 after addition of a level-2 predictor
+# summary(m.1)
+# summary(m.2)
+# m.1.l1.resid <- 0.7275
+# m.1.l2.resid <- 0.2430
+# m.2.l1.resid <- 0.37995
+# m.2.l2.resid <- 0.02204
+# (m.1.l1.resid-m.2.l1.resid)/m.1.l1.resid
+# 
+# #  Proportion variance explained at level-2 after addition of a level-2 predictor
+# (m.1.l2.resid-m.2.l2.resid)/m.1.l2.resid
+```
+
+## Model 4: Prior achievement + student characteristics + teacher characteristics
+
+The model above is expanded by adding covariates for the teacher characteristics.  
+
+### Model summary
+Results show a negative effect for PD_NLow and CYears_N11-15. In addition, the overall test of model fit showed that model 4 fit the data better than model 3. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# fit model ----
+m.4 <- lmer(g10_c ~ g8_c + g8_c2 + ELL_recode + Lunch_N + SPED_N + 
+              relevel(Race_N, ref="Caucasian") + Gender_N + 
+              CYears_N + PD_N +(1 | ID), 
+            data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.4)
+
+# bias corrected standard errors ----
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+# boot.m.3 <- bootstrap(model = m.3, fn = mySumm, type = "case", B = 500, 
+#                       resample = c(TRUE, FALSE))
+# 
+# #bootstrap confidence intervals
+# #boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+# 
+# boot.m.3.summary <- summary(boot.m.3)
+# boot.m.3.summary
+# # tibble for summary bootstrap estimates
+# boot.m.3.summary.tib <- tibble(
+#   Variable = c("Intercept", "Grade 10 MCAS"),
+#   "Original Estimate" = c(boot.m.3.summary[1,2], boot.m.3.summary[2,2]),
+#   "Median Bootstrap Estimate" = c(boot.m.3.summary[1,5], boot.m.3.summary[2,5]), 
+#   "Bootstrap SE" = c(boot.m.3.summary[1,4], boot.m.3.summary[2,4]), 
+#   "Bias" = c(boot.m.3.summary[1, 3], boot.m.3.summary[2, 3]))
+# 
+# # print the tibble as html object 
+# kable(boot.m.2.summary.tib, digits = 3, format="html", 
+#       caption="Non-parametric bootstrap estimates for the null model") %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+#                                       full_width = T))
+# 
+# 
+# fctr <- lapply(m_vars[sapply(m_vars, is.factor)], droplevels)
+# ## count levels
+# sapply(fctr, nlevels)
+
+# test the fit of one mdoel over the other
+tidy(anova(m.4, m.3))
+```
+
+Overall, the model accounts for about 72% of the variance in the outcome. Again, prior MCAS and SPED status are the most important preditors in the model. The reduction in varaince accounted for by prior MCAS is likely due to shared variance with other variables in the model. It is notable that the variance remaining at the teacher-level is 0. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+#  Proportion variance explained ---- 
+# r2nsj: the proportion of variance explained by the fixed predictors. This statistic is a simplified version of Rβ2 that can be used as a substitute for models fitted to very large datasets.
+r2nsj.m4 <- r2beta(m.4, method = 'nsj', partial = TRUE)
+
+# print the table
+kable(as_data_frame(r2nsj.m4) , digits = 3, format="html", 
+      caption="The Nakagawa and Schielzeth (2013) method for calculating the proportion of variance explained by the fixed predictors") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# #  Proportion variance explained at level-1 after addition of a level-2 predictor
+# summary(m.1)
+# summary(m.2)
+# m.1.l1.resid <- 0.7275
+# m.1.l2.resid <- 0.2430
+# m.2.l1.resid <- 0.37995
+# m.2.l2.resid <- 0.02204
+# (m.1.l1.resid-m.2.l1.resid)/m.1.l1.resid
+# 
+# #  Proportion variance explained at level-2 after addition of a level-2 predictor
+# (m.1.l2.resid-m.2.l2.resid)/m.1.l2.resid
+```
+
+## Model 5: Prior achievement + student characteristics + teacher characteristics + MHoM total scale
+
+The model above is expanded by adding covariates for the teacher characteristics with the total score for the MHoM measure.  
+
+### Model summary
+Results show a non-significant positive effect for TotalScore. However, the overall test of model fit showed that model 5 did not fit the data better than model 4. 
+
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# fit model ----
+m.5 <- lmer(g10_c ~ g8_c + g8_c2 + ELL_recode + Lunch_N + SPED_N + 
+              relevel(Race_N, ref="Caucasian") + Gender_N + 
+              CYears_N + PD_N + TotalScore_c + (1 | ID), 
+            data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.5)
+
+# bias corrected standard errors ----
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+# boot.m.3 <- bootstrap(model = m.3, fn = mySumm, type = "case", B = 500, 
+#                       resample = c(TRUE, FALSE))
+# 
+# #bootstrap confidence intervals
+# #boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+# 
+# boot.m.3.summary <- summary(boot.m.3)
+# boot.m.3.summary
+# # tibble for summary bootstrap estimates
+# boot.m.3.summary.tib <- tibble(
+#   Variable = c("Intercept", "Grade 10 MCAS"),
+#   "Original Estimate" = c(boot.m.3.summary[1,2], boot.m.3.summary[2,2]),
+#   "Median Bootstrap Estimate" = c(boot.m.3.summary[1,5], boot.m.3.summary[2,5]), 
+#   "Bootstrap SE" = c(boot.m.3.summary[1,4], boot.m.3.summary[2,4]), 
+#   "Bias" = c(boot.m.3.summary[1, 3], boot.m.3.summary[2, 3]))
+# 
+# # print the tibble as html object 
+# kable(boot.m.2.summary.tib, digits = 3, format="html", 
+#       caption="Non-parametric bootstrap estimates for the null model") %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+#                                       full_width = T))
+# 
+# 
+# fctr <- lapply(m_vars[sapply(m_vars, is.factor)], droplevels)
+# ## count levels
+# sapply(fctr, nlevels)
+
+# Standard Error Correction (Note. Bootstrap function broken with relevel command, need to fix)
+m.5.rlmer <- rlmer(g10_c ~ g8_c + g8_c2 + ELL_recode + Lunch_N + SPED_N + 
+              relevel(Race_N, ref="Caucasian") + Gender_N + 
+              CYears_N + PD_N + TotalScore_c + (1 | ID), 
+            data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.5.rlmer)
+
+# test the fit of one mdoel over the other
+tidy(anova(m.5, m.4))
+```
+
+Overall, the model accounts for the same proportion of variance in the outcome, which is not surprising given the overall test of model fit indicated that the inclusion of TotalScore did not significantly improve model fit. The variance accounted for by TotalScore in students' 10th grad MCAS scores was less than 1%. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+#  Proportion variance explained ----
+# r2nsj: the proportion of variance explained by the fixed predictors. This statistic is a simplified version of Rβ2 that can be used as a substitute for models fitted to very large datasets.
+r2nsj.m5 <- r2beta(m.5, method = 'nsj', partial = TRUE)
+
+# print the table
+kable(as_data_frame(r2nsj.m5) , digits = 3, format="html", 
+      caption="The Nakagawa and Schielzeth (2013) method for calculating the proportion of variance explained by the fixed predictors") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# #  Proportion variance explained at level-1 after addition of a level-2 predictor
+# summary(m.1)
+# summary(m.2)
+# m.1.l1.resid <- 0.7275
+# m.1.l2.resid <- 0.2430
+# m.2.l1.resid <- 0.37995
+# m.2.l2.resid <- 0.02204
+# (m.1.l1.resid-m.2.l1.resid)/m.1.l1.resid
+# 
+# #  Proportion variance explained at level-2 after addition of a level-2 predictor
+# (m.1.l2.resid-m.2.l2.resid)/m.1.l2.resid
+```
+
+Useful plots for the model are found below. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# plots ----
+
+# set the theme in sjplot
+set_theme(base = theme_minimal())
+# sjp.lmer(m.2, sort.est = "sort.all", y.offset = .4)
+
+# fixed effects plot
+p.m.5.fe <- sjp.lmer(m.5, type = "fe", axis.lim = c(-2, 2), y.offset = .3)
+
+# add additional plot themes
+p.m.5.fe.2 <- p.m.5.fe$plot + ggtitle("Fixed effects for model 5") + 
+  labs(x="Parameters", y="Estimates", 
+       subtitle="Including MHoM Total Scores", colour = "Teacher ID") 
+# save plot
+ggsave("p.m.5.fe.2.png", width=15, height=12)
+
+#custom table for regressions
+sjt.lmer(m.5)
+
+table.m.5 <- sjt.lmer(m.5, pred.labels = c("Grade 8 MCAS (z-score)",
+         "Grade 8 MCAS^2 (z-score)", "ELL (Other)",
+         "ELL (SEI)", "Lunch Status (P)", "Lunch Status (R)", 
+         "No SPED", "African American Student", "Asian Studnet",
+         "Multiple Races Student", "Male Teacher", "CYEARS (11-15)",
+         "CYEARS (2-5)", "CYEARS (6-10)", "CYEARS (More than 20)",
+         "PD (Low)", "PD (Medium)", "MHoM Total Score"), 
+         file="../assets/table.m.5.html")
+table.m.5        
+```
+
+## Model 6: Prior achievement + student characteristics + teacher characteristics + MHoM subscales
+
+The model above is expanded by adding covariates for the teacher characteristics with the each susbscale from the MHoM measure.  
+
+### Model summary
+Results show a non-significant effects for each subscale of the MHoM measure However, the overall test of model fit showed that model 5 did not fit the data better than model 4. 
+```{r, echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+# fit model ----
+m.6 <- lmer(g10_c ~ g8_c + g8_c2 + ELL_recode + Lunch_N + SPED_N + 
+              relevel(Race_N, ref="Caucasian") + Gender_N + 
+              CYears_N + PD_N + Using_score_c + Seeking_score_c + 
+              Describing_Score_c + (1 | ID), 
+            data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.6)
+
+# bias corrected standard errors ----
+
+# run the non-parametric bootstrap, sampling students within their classes/teacher
+# boot.m.3 <- bootstrap(model = m.3, fn = mySumm, type = "case", B = 500, 
+#                       resample = c(TRUE, FALSE))
+# 
+# #bootstrap confidence intervals
+# #boot.ci(boo2, index = 1, type=c("norm", "basic", "perc"))
+# 
+# boot.m.3.summary <- summary(boot.m.3)
+# boot.m.3.summary
+# # tibble for summary bootstrap estimates
+# boot.m.3.summary.tib <- tibble(
+#   Variable = c("Intercept", "Grade 10 MCAS"),
+#   "Original Estimate" = c(boot.m.3.summary[1,2], boot.m.3.summary[2,2]),
+#   "Median Bootstrap Estimate" = c(boot.m.3.summary[1,5], boot.m.3.summary[2,5]), 
+#   "Bootstrap SE" = c(boot.m.3.summary[1,4], boot.m.3.summary[2,4]), 
+#   "Bias" = c(boot.m.3.summary[1, 3], boot.m.3.summary[2, 3]))
+# 
+# # print the tibble as html object 
+# kable(boot.m.2.summary.tib, digits = 3, format="html", 
+#       caption="Non-parametric bootstrap estimates for the null model") %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+#                                       full_width = T))
+# 
+# 
+# fctr <- lapply(m_vars[sapply(m_vars, is.factor)], droplevels)
+# ## count levels
+# sapply(fctr, nlevels)
+
+# Standard Error Correction (Note. Bootstrap function broken with relevel command, need to fix)
+m.6.rlmer <- rlmer(g10_c ~ g8_c + g8_c2 + ELL_recode + Lunch_N + SPED_N + 
+              relevel(Race_N, ref="Caucasian") + Gender_N + 
+              CYears_N + PD_N + Using_score_c + Seeking_score_c + 
+              Describing_Score_c + (1 | ID), 
+            data=m_vars, REML=FALSE, verbose=1, na.action = "na.omit")
+summary(m.6.rlmer)
+# test the fit of one mdoel over the other
+tidy(anova(m.6, m.5))
+```
+
+Overall, the model accounts for the same proportion of variance in the outcome, which is not surprising given the overall test of model fit indicated that the inclusion of TotalScore did not significantly improve model fit. The variance accounted for each subscale in students' 10th grad MCAS scores was less than 5%. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE}
+#  Proportion variance explained ----
+# r2nsj: the proportion of variance explained by the fixed predictors. This statistic is a simplified version of Rβ2 that can be used as a substitute for models fitted to very large datasets.
+r2nsj.m6 <- r2beta(m.6, method = 'nsj', partial = TRUE)
+
+# print the table
+kable(as_data_frame(r2nsj.m6) , digits = 3, format="html", 
+      caption="The Nakagawa and Schielzeth (2013) method for calculating the proportion of variance explained by the fixed predictors") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", 
+                                      full_width = T))
+
+# #  Proportion variance explained at level-1 after addition of a level-2 predictor
+# summary(m.1)
+# summary(m.2)
+# m.1.l1.resid <- 0.7275
+# m.1.l2.resid <- 0.2430
+# m.2.l1.resid <- 0.37995
+# m.2.l2.resid <- 0.02204
+# (m.1.l1.resid-m.2.l1.resid)/m.1.l1.resid
+# 
+# #  Proportion variance explained at level-2 after addition of a level-2 predictor
+# (m.1.l2.resid-m.2.l2.resid)/m.1.l2.resid
+```
+
+Useful plots for the model are found below. 
+```{r , echo=FALSE, message=TRUE, warning=FALSE, tidy=TRUE, results='asis'}
+# plots ----
+
+# set the theme in sjplot
+set_theme(base = theme_minimal())
+# sjp.lmer(m.2, sort.est = "sort.all", y.offset = .4)
+
+# fixed effects plot
+p.m.6.fe <- sjp.lmer(m.6, type = "fe", axis.lim = c(-2, 2), y.offset = .3)
+
+# add additional plot themes
+p.m.6.fe.2 <- p.m.6.fe$plot + ggtitle("Fixed effects for model 6") + 
+  labs(x="Parameters", y="Estimates", 
+       subtitle="Including MHoM Subscale Scores", colour = "Teacher ID") 
+# save plot
+ggsave("p.m.6.fe.2.png", width=15, height=12)
+
+#custom table for regressions
+#sjt.lmer(m.6)
+
+sjt.lmer(m.6, pred.labels = c("Grade 8 MCAS (z-score)",
+         "Grade 8 MCAS^2 (z-score)", "ELL (Other)",
+         "ELL (SEI)", "Lunch Status (P)", "Lunch Status (R)", 
+         "No SPED", "African American Student", "Asian Studnet",
+         "Multiple Races Student", "Male Teacher", "CYEARS (11-15)",
+         "CYEARS (2-5)", "CYEARS (6-10)", "CYEARS (More than 20)",
+         "PD (Low)", "PD (Medium)", "MHoM Using", "MHoM Seeking",
+         "MHoM Describing"))
 ```

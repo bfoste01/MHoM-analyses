@@ -1,0 +1,218 @@
+bplist00�_WebMainResource�	
+_WebResourceTextEncodingName^WebResourceURL_WebResourceFrameName_WebResourceData_WebResourceMIMETypeUUTF-8_3http://localhost:18317/session/file5f66daa800e.htmlPO ;<html><head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<style>
+html, body { background-color: white; }
+table { border-collapse:collapse; border:none;border-bottom:double; }
+.thead { border-bottom: 1px solid; padding:0.2cm; }
+.tdata { padding:0.2cm; }
+.summary { padding-top:0.1cm; padding-bottom:0.1cm; }
+.colnames { font-style:italic; }
+.firstsumrow { border-top:1px solid; }
+.lasttablerow { border-bottom: double; }
+.topborder { border-top:double; }
+.depvarhead { text-align:center; border-bottom:1px solid; }
+.topcontentborder { border-top:1px solid; }
+.annorow { border-top:1px solid; }
+.noannorow { border-bottom:double; }
+.annostyle { text-align:right; }
+.labelcellborder { border-bottom:1px solid; }
+.centeralign { text-align:center; }
+.leftalign { text-align:left; }
+.grouprow { padding:0.2cm; }
+.tgrpdata { font-style:italic; padding:0.2cm; padding-left:0.6cm; }
+.modelcolumn1 {  }
+.modelcolumn2 {  }
+.modelcolumn3 {  }
+.modelcolumn4 {  }
+.modelcolumn5 {  }
+.modelcolumn6 {  }
+.modelcolumn7 {  }
+.fixedparts { font-weight:bold; text-align:left; }
+.randomparts { font-weight:bold; text-align:left; padding-top:0.5em; }
+.separatorcol { padding-left:0.5em; padding-right:0.5em; }
+</style>
+</head>
+<body>
+<table>
+<tbody><tr><td class="tdata topborder">&nbsp;</td>
+<td class="labelcellborder separatorcol topborder">&nbsp;</td>
+<td class="tdata centeralign labelcellborder topborder" colspan="3">g10_c</td>
+</tr>
+<tr>
+<td class="tdata colnames">&nbsp;</td>
+<td class="separatorcol colnames">&nbsp;</td>
+<td class="tdata centeralign colnames modelcolumn1">B</td>
+<td class="tdata centeralign colnames modelcolumn2">CI</td>
+<td class="tdata centeralign colnames modelcolumn7">p</td> 
+</tr>
+<tr>
+<td colspan="5" class="tdata leftalign topcontentborder fixedparts">Fixed Parts</td>
+</tr>
+<tr>
+<td class="tdata leftalign">(Intercept)</td>
+<td class="separatorcol ">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.59</td>
+<td class="tdata centeralign modelcolumn2">-0.32&nbsp;–&nbsp;1.50</td>
+<td class="tdata centeralign modelcolumn7">.207</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Grade 8 MCAS (z-score)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.61</td>
+<td class="tdata centeralign modelcolumn2">0.53&nbsp;–&nbsp;0.70</td>
+<td class="tdata centeralign modelcolumn7">&lt;.001</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Grade 8 MCAS^2 (z-score)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.22</td>
+<td class="tdata centeralign modelcolumn2">-0.28&nbsp;–&nbsp;-0.16</td>
+<td class="tdata centeralign modelcolumn7">&lt;.001</td>
+</tr>
+<tr>
+<td class="tdata leftalign">ELL (Other)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">1.07</td>
+<td class="tdata centeralign modelcolumn2">0.30&nbsp;–&nbsp;1.83</td>
+<td class="tdata centeralign modelcolumn7">.007</td>
+</tr>
+<tr>
+<td class="tdata leftalign">ELL (SEI)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.23</td>
+<td class="tdata centeralign modelcolumn2">-0.11&nbsp;–&nbsp;0.58</td>
+<td class="tdata centeralign modelcolumn7">.191</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Lunch Status (P)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.13</td>
+<td class="tdata centeralign modelcolumn2">-0.04&nbsp;–&nbsp;0.30</td>
+<td class="tdata centeralign modelcolumn7">.145</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Lunch Status (R)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.02</td>
+<td class="tdata centeralign modelcolumn2">-0.30&nbsp;–&nbsp;0.26</td>
+<td class="tdata centeralign modelcolumn7">.882</td>
+</tr>
+<tr>
+<td class="tdata leftalign">No SPED</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.43</td>
+<td class="tdata centeralign modelcolumn2">0.15&nbsp;–&nbsp;0.70</td>
+<td class="tdata centeralign modelcolumn7">.003</td>
+</tr>
+<tr>
+<td class="tdata leftalign">African American Student</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.09</td>
+<td class="tdata centeralign modelcolumn2">-0.35&nbsp;–&nbsp;0.16</td>
+<td class="tdata centeralign modelcolumn7">.474</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Asian Studnet</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.13</td>
+<td class="tdata centeralign modelcolumn2">-0.11&nbsp;–&nbsp;0.38</td>
+<td class="tdata centeralign modelcolumn7">.291</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Multiple Races Student</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.12</td>
+<td class="tdata centeralign modelcolumn2">-0.52&nbsp;–&nbsp;0.75</td>
+<td class="tdata centeralign modelcolumn7">.718</td>
+</tr>
+<tr>
+<td class="tdata leftalign">Male Teacher</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.76</td>
+<td class="tdata centeralign modelcolumn2">-0.01&nbsp;–&nbsp;1.54</td>
+<td class="tdata centeralign modelcolumn7">.055</td>
+</tr>
+<tr>
+<td class="tdata leftalign">CYEARS (11-15)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.88</td>
+<td class="tdata centeralign modelcolumn2">-1.83&nbsp;–&nbsp;0.08</td>
+<td class="tdata centeralign modelcolumn7">.073</td>
+</tr>
+<tr>
+<td class="tdata leftalign">CYEARS (2-5)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-1.39</td>
+<td class="tdata centeralign modelcolumn2">-2.99&nbsp;–&nbsp;0.21</td>
+<td class="tdata centeralign modelcolumn7">.089</td>
+</tr>
+<tr>
+<td class="tdata leftalign">CYEARS (6-10)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.75</td>
+<td class="tdata centeralign modelcolumn2">-1.56&nbsp;–&nbsp;0.05</td>
+<td class="tdata centeralign modelcolumn7">.068</td>
+</tr>
+<tr>
+<td class="tdata leftalign">CYEARS (More than 20)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.36</td>
+<td class="tdata centeralign modelcolumn2">-0.95&nbsp;–&nbsp;1.66</td>
+<td class="tdata centeralign modelcolumn7">.594</td>
+</tr>
+<tr>
+<td class="tdata leftalign">PD (Low)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.98</td>
+<td class="tdata centeralign modelcolumn2">-1.84&nbsp;–&nbsp;-0.13</td>
+<td class="tdata centeralign modelcolumn7">.025</td>
+</tr>
+<tr>
+<td class="tdata leftalign">PD (Medium)</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">-0.09</td>
+<td class="tdata centeralign modelcolumn2">-0.34&nbsp;–&nbsp;0.16</td>
+<td class="tdata centeralign modelcolumn7">.480</td>
+</tr>
+<tr>
+<td class="tdata leftalign">MHoM Total Score</td>
+<td class="separatorcol">&nbsp;</td>
+<td class="tdata centeralign modelcolumn1">0.03</td>
+<td class="tdata centeralign modelcolumn2">-0.09&nbsp;–&nbsp;0.16</td>
+<td class="tdata centeralign modelcolumn7">.594</td>
+</tr><tr>
+<td colspan="5" class="tdata summary leftalign randomparts">Random Parts</td>
+</tr>
+
+<tr>
+<td class="tdata summary leftalign">σ<sup>2</sup></td>
+<td class="separatorcol">&nbsp;</td><td class="tdata centeralign summary" colspan="3">0.282</td>
+</tr>
+
+<tr>
+<td class="tdata summary leftalign">τ<sub>00, ID</sub></td>
+<td class="separatorcol">&nbsp;</td><td class="tdata centeralign summary" colspan="3">0.000</td>
+</tr>
+
+<tr>
+<td class="tdata summary leftalign">N<sub>ID</sub></td>
+<td class="separatorcol">&nbsp;</td><td class="tdata centeralign summary" colspan="3">12</td>
+</tr>
+<tr>
+<td class="tdata leftalign summary">ICC<sub>ID</sub></td>
+<td class="separatorcol">&nbsp;</td><td class="tdata centeralign summary" colspan="3">0.000</td>
+ </tr>
+
+<tr>
+<td class="tdata summary leftalign firstsumrow">Observations</td>
+<td class="separatorcol firstsumrow">&nbsp;</td><td class="tdata summary centeralign firstsumrow" colspan="3">254</td>
+</tr>
+<tr>
+<td class="tdata leftalign summary">R<sup>2</sup> / Ω<sub>0</sub><sup>2</sup></td>
+
+<td class="separatorcol">&nbsp;</td><td class="tdata centeralign summary" colspan="3">.717 / .717</td>
+ </tr>
+</tbody></table>
+
+</body></html>Ytext/html    ( F U l ~ � � � �!                           !
